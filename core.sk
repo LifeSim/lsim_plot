@@ -1,0 +1,43 @@
+# ps some random stuff is scattered in here sorry
+on join:
+    loop {usablePlots::*}:
+        if size of {usablePlots::*} >= 2:
+            set {_p} to a random element out of {usablePlots::*}
+            teleport player to {_p}
+            set {currentOwner::%{_p}%} to player
+        else:
+            set {_p} to a random element out of {usablePlots::*}
+            teleport player to {_p}
+            set {currentOwner::%{_p}%} to player
+on door open:
+    if player is in region "plots":
+        set {_p::*} to {plots::*}
+        loop {_p::*}:
+            if player is in region "%loop-value%":
+                if {currentOwner::%{_p}%} is not player:
+                    if {roomie::%{_p%::%player's uuid%} is false:
+                        cancel event
+                        message "&cYou don't have permission to use this."
+on join:
+    if {firstJoin::%player u%} == "SET":
+        open chest with 2 rows named "&eLifeSim" to player
+        format slot 0, 1, 2, 3, 4, 5, 6, 7, 8 of player to blue stained glass pane named "Play!" to close [message "&eHave fun!"]
+        format slot 9, 10, 11, 12, 13, 14, 15, 16, 17 of player to cyan stained glass named "Shop!" to run [message "&cIncomplete!" to player]
+command /perms <player>:
+    aliases: roommate, roomie, giveperms, giveguest:
+        trigger:
+            if {roomie::%arg-1%} == true:
+                set {roomie::%player's plot%::%arg-1's uuid%} to false
+                message "&e%arg-1% is no longer your roommate."
+            else:
+                set {roomie::%player's plot%::%arg-1's uuid%} to true
+                message "&e%arg-1% is now your roommate."
+                sendNotif(arg-1, "%player% has gave you Roommate at their plot.")
+
+on quit:
+    loop all players:
+        delete {roomie::%loop-player's plot%::%player's uuid%}
+        add player's plot to {usablePlots::*}
+        delete {currentOwner::%player's plot%}
+on join:
+    teleport player to {spawn}
