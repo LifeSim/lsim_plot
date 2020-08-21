@@ -1,21 +1,20 @@
 # ps some random stuff is scattered in here sorry
 on join:
     loop {usablePlots::*}:
-        if size of {usablePlots::*} >= 2:
+        if size of {usablePlots::*} >= 1:
             set {_p} to a random element out of {usablePlots::*}
             teleport player to {_p}
             set {currentOwner::%{_p}%} to player
+            remove {_p} from {usablePlots::*}
         else:
-            set {_p} to a random element out of {usablePlots::*}
-            teleport player to {_p}
-            set {currentOwner::%{_p}%} to player
+            kick player due to "&cFull Server!"
 on door open:
     if player is in region "plots":
         set {_p::*} to {plots::*}
         loop {_p::*}:
             if player is in region "%loop-value%":
-                if {currentOwner::%{_p}%} is not player:
-                    if {roomie::%{_p%::%player's uuid%} is false:
+                if {currentOwner::%loop-value%} is not player:
+                    if {roomie::%loop-value%::%player's uuid%} is false:
                         cancel event
                         message "&cYou don't have permission to use this."
 on join:
